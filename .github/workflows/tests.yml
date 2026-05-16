@@ -19,7 +19,7 @@ jobs:
         run: composer install
 
       - name: Rodar testes
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit tests
 
   release:
     runs-on: ubuntu-latest
