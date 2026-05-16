@@ -1,0 +1,39 @@
+name: CI - Testes e Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Instalar dependências
+        run: composer install
+
+      - name: Rodar testes
+        run: vendor/bin/phpunit
+
+  release:
+    runs-on: ubuntu-latest
+    needs: testes
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Criar Release automático
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: "Release v1.0.${{ github.run_number }}"
+          body: "Testes passaram. Release gerado automaticamente pelo Actions."
+          files: src/Calculator.php
